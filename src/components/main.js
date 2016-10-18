@@ -24,7 +24,7 @@ const Main = React.createClass({
     getUserMedia: {},
     componentDidMount: function() {
         var pthis = this;
-        this.ws = new WebSocket("wss://localhost/")
+        this.ws = new WebSocket("wss://localhost/serv");
         this.ws.onmessage = function(event) {
             var msg = JSON.parse(event.data);
             switch (msg.msg) {
