@@ -13,6 +13,7 @@ const Main = React.createClass({
         return {
             state: 'ready',
             online_num: 0,
+            pairing_num: 0,
             role: 'none',
             remote_video_src: '',
             local_video_src: ''
@@ -24,7 +25,7 @@ const Main = React.createClass({
     getUserMedia: {},
     componentDidMount: function() {
         var pthis = this;
-        this.ws = new WebSocket("wss://10.180.27.135/serv");
+        this.ws = new WebSocket("wss://localhost/serv");
         this.ws.onmessage = function(event) {
             var msg = JSON.parse(event.data);
             switch (msg.msg) {
@@ -34,7 +35,7 @@ const Main = React.createClass({
                 case 'ok':
                     break;
                 case 'update':
-                    pthis.setState({online_num: msg.online_num});
+                    pthis.setState({online_num: msg.online_num, pairing_num: msg.pairing_num});
                     break;
                 case 'paired':
                     pthis.setState({state: 'paired', role: msg.role});
@@ -144,7 +145,8 @@ const Main = React.createClass({
                     </CardMedia>
                     <CardText>
                         当前在线人数：{this.state.online_num} <br/>
-                        {this.state.state == "pairing" ? <LinearProgress mode="indeterminate"/> : "预计匹配时间： 1分钟" }
+                        正在匹配人数：{this.state.pairing_num} <br/>
+                        {this.state.state == "pairing" ? <LinearProgress mode="indeterminate"/> : "预计匹配时间：" + this.state.pairing_num < 2 ? 100 : this.state.pairing_num * 10 / this.state.online_num }
                         {this.state.state == "pairing" ? "正在匹配。。。" : "" }
 
                         </CardText>
