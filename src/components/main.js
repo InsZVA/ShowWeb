@@ -126,6 +126,19 @@ const Main = React.createClass({
         this.setState({state: 'ready'});
     },
     render: function() {
+        var tip = "" ;
+        if (this.state.state == "pairing") {
+            tip = <div>当前在线人数 {this.state.online_num}  <br/>
+                    正在匹配人数：{this.state.pairing_num} <br/>
+                    预计匹配时间(分钟)：{this.state.pairing_num < 2 ? 100 : this.state.pairing_num * 10 / this.state.online_num}
+                </div>
+        } else {
+            tip = <div>当前在线人数 {this.state.online_num}  <br/>
+                正在匹配人数：{this.state.pairing_num} <br/>
+                <LinearProgress mode="indeterminate"/>
+                正在匹配。。。
+            </div>
+        }
         if (this.state.state == 'pairing' || this.state.state == 'ready')
             return <div>
                 <AppBar
@@ -143,12 +156,8 @@ const Main = React.createClass({
                     >
                         <img src="http://i0.sinaimg.cn/gm/2014/0801/U7233P115DT20140801133337.jpg"/>
                     </CardMedia>
-                    <CardText>
-                        当前在线人数：{this.state.online_num} <br/>
-                        正在匹配人数：{this.state.pairing_num} <br/>
-                        {this.state.state == "pairing" ? <LinearProgress mode="indeterminate"/> : "预计匹配时间：" + this.state.pairing_num < 2 ? 100 : this.state.pairing_num * 10 / this.state.online_num }
-                        {this.state.state == "pairing" ? "正在匹配。。。" : "" }
-
+                        <CardText>
+                        {tip}
                         </CardText>
                     <CardActions>
                         {this.state.state != "pairing" ? <FlatButton label="开始配对" onClick={this.startpair}/> : <FlatButton label="停止配对" onClick={this.stoppair} /> }
